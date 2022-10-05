@@ -1,0 +1,17 @@
+Flask==2.1.2
+Flask-SQLAlchemy
+Authlib==0.15.5
+boto3
+pytest
+mock
+psycopg2==2.9.3
+gunicorn
+gevent
+bcrypt
+sqlalchemy==1.4.29
+requests
+flask_swagger==0.2.14
+flask_swagger_ui==3.36.0
+pydantic==1.9.1
+email-validator==1.2.1
+

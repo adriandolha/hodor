@@ -1,0 +1,116 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hodor
+  namespace: hodor
+  labels:
+    app: hodor
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: hodor
+  template:
+    metadata:
+      labels:
+        app: hodor
+    spec:
+      containers:
+        - name: hodor
+          image: hodor:dev
+#          imagePullPolicy: "Always"
+          env:
+            - name: "AUTHLIB_INSECURE_TRANSPORT"
+              value: "1"
+            - name: app_env
+              value: "kube"
+            - name: aurora_user
+              value: "postgres"
+            - name: database_name
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: aurora-database
+            - name: aurora_host
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: aurora-host
+            - name: aurora_port
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: aurora-port
+            - name: aurora_password
+              valueFrom:
+                secretKeyRef:
+#                  name: existing-peahen-postgresql
+                  name: postgres-postgresql
+                  key:  postgresql-password
+            - name: admin_user
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: admin-user
+            - name: admin_password
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: admin-password
+            - name: guest_user
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: guest-user
+            - name: guest_password
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: guest-password
+            - name: google_client_id
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: google-client-id
+            - name: google_client_secret
+              valueFrom:
+                secretKeyRef:
+                  name: hodor
+                  key: google-client-secret
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          volumeMounts:
+            - mountPath: /jwk/certs
+              name: jwk-certs
+        - name: statsd-exporter
+          image: prom/statsd-exporter:latest
+      volumes:
+        - name: jwk-certs
+          secret:
+            secretName: jwk-certs
+            items:
+              - key: public.key
+                path: public.key
+              - key: private.key
+                path: private.key
+
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: hodor
+  namespace: hodor
+spec:
+  type: NodePort
+  selector:
+    app: hodor
+  ports:
+    - protocol: TCP
+      name: http
+      port: 80
+      targetPort: 8000
+      nodePort: 32000

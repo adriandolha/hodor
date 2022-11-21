@@ -609,6 +609,7 @@ def get_permissions():
     """
 
     _permissions = list(map(lambda user: api.Permission.from_orm(user).dict(), Permission.query.all()))
+    _permissions.sort(key=lambda item: item['name'])
     return jsonify({'total': len(_permissions), 'items': _permissions}), 200
 
 

@@ -61,22 +61,25 @@ const Permissions = ({ values, allPermissions, onDelete, onAdd }) => {
     }
     return (
         <Grid container spacing={1} >
-            <Grid item xs={4}>
-                <PermissionsSelect allPermissions={allPermissions} handlePermissionSelect={handlePermissionSelect} />
-                <Button variant='contained'
-                    color='primary'
-                    size='small'
-                    sx={{ marginTop: 1, fontSize: '10px' }}
-                    onClick={() => {
-                        // console.log('Adding permission')
-                        // console.log('New permissions...')
-                        const new_permissions = [...permissions, selectedPermission]
-                        // console.log(new_permissions)
-                        setPermissions(new_permissions)
-                        onAdd && onAdd(selectedPermission)
-                    }}>
-                    ADD
-                </Button>
+            <Grid item container xs={4} sx={{marginTop: 1}}>
+                <Grid item xs={12}>
+                    <PermissionsSelect allPermissions={allPermissions} handlePermissionSelect={handlePermissionSelect} />
+                    <Button variant='contained'
+                        color='primary'
+                        size='small'
+                        sx={{ marginTop: 1, marginBottom:1, fontSize: '10px', display:'block' }}
+                        onClick={() => {
+                            // console.log('Adding permission')
+                            // console.log('New permissions...')
+                            const new_permissions = [...permissions, selectedPermission]
+                            // console.log(new_permissions)
+                            setPermissions(new_permissions)
+                            onAdd && onAdd(selectedPermission)
+                        }}>
+                        ADD
+                    </Button>
+                </Grid >
+                
             </Grid>
             <Grid item xs={8}>
                 <PermissionsList values={permissions} onDelete={(perm) => {

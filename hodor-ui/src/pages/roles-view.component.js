@@ -32,7 +32,7 @@ function RolesView() {
                 return res.json();
             })
             .then(res => {
-                setMessage('Saved.')
+                setMessage('Saved role.')
                 fetch_roles()
             })
             // .then(() => setLoading(false))
@@ -52,6 +52,7 @@ function RolesView() {
                 }
                 return res;
             })
+            .then(() => setMessage('Role deleted.'))
             .then(() => fetch_roles())
             .catch((error) => {
                 console.log(`Error: ${error}`);
@@ -199,9 +200,11 @@ function RolesView() {
         ];
         return (
             <Grid container spacing={1}>
+                {error && <ErrorMessage message={error.message} onExit={() => { setError(null) }} />}
+                {message && <Success message={message} onExit={() => { setMessage(null) }} />}
                 <AddRole show={showAddRole}
                     handleClose={() => { setShowAddRole(false) }}
-                    onSave={() => { fetch_roles() }}></AddRole>
+                    onSave={() => { setShowAddRole(false);fetch_roles() }}></AddRole>
 
                 <DataTable columns={columns}
                     rows={rows}

@@ -58,51 +58,55 @@ function AddRolePage(props) {
     }
     return (
         <Grid container spacing={2} sx={{ marginLeft: 3 }}>
-            <Form>
-                <Stack spacing={2} sx={{ marginBottom: 1, marginTop: 1 }}>
-                    <Grid item container direction='column' xs={12}>
-                        <TextField
-                            // fullWidth
-                            id="name"
-                            name="name"
-                            label="Name"
-                            value={values.name}
-                            onChange={handleChange}
-                            error={touched.name && Boolean(errors.name)}
-                            helperText={touched.name && errors.name}
-                        />
-                        <FormControlLabel control={<Checkbox defaultChecked onChange={(e) => {
-                            console.log(e.target.checked)
-                            values.default = e.target.checked
-                        }} />} label="Default" />
+            <Grid item xs={10}>
+
+                <Form>
+                    <Grid container spacing={2} sx={{ marginBottom: 1, marginTop: 1 }}>
+                        <Grid item container direction='column' xs={12}>
+                            <TextField
+                                // fullWidth
+                                id="name"
+                                name="name"
+                                label="Name"
+                                value={values.name}
+                                onChange={handleChange}
+                                error={touched.name && Boolean(errors.name)}
+                                helperText={touched.name && errors.name}
+                            />
+                            <FormControlLabel control={<Checkbox defaultChecked onChange={(e) => {
+                                console.log(e.target.checked)
+                                values.default = e.target.checked
+                            }} />} label="Default" />
+                        </Grid>
+                        <Grid item container xs={8}>
+                            <Permissions values={values.permissions}
+                                allPermissions={perms.items}
+                                onAdd={(perm) => {
+                                    values.permissions.push(perm)
+                                }}
+                                onDelete={(perm) => {
+                                    values.permissions = values.permissions.filter(p => p.name != perm.name)
+                                }} />
+
+                        </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                        <Permissions values={values.permissions}
-                            allPermissions={perms.items}
-                            onAdd={(perm) => {
-                                values.permissions.push(perm)
-                            }}
-                            onDelete={(perm) => {
-                                values.permissions = values.permissions.filter(p => p.name != perm.name)
-                            }} />
 
-                    </Grid>
-                </Stack>
+                    <Button type="submit" variant="contained" color="primary" size='small'>
+                        <Typography sx={{ marginLeft: 1 }}>
+                            Add
+                        </Typography>
+                    </Button>
+                    <Button type="secondary" variant="contained" color="secondary" size='small' onClick={props.onClose}
+                        sx={{ margin: 1 }}>
+                        <Typography sx={{ marginLeft: 1 }}>
+                            Close
+                        </Typography>
+                    </Button>
 
-                <Button type="submit" variant="contained" color="primary" size='small'>
-                    <Typography sx={{ marginLeft: 1 }}>
-                        Add
-                    </Typography>
-                </Button>
-                <Button type="secondary" variant="contained" color="secondary" size='small' onClick={props.onClose}
-                    sx={{ margin: 1 }}>
-                    <Typography sx={{ marginLeft: 1 }}>
-                        Close
-                    </Typography>
-                </Button>
+                </Form>
+                {errors && errors.submit && <ErrorMessage message={errors.submit.message} />}
+            </Grid>
 
-            </Form>
-            {errors && errors.submit && <ErrorMessage message={errors.submit.message} />}
         </Grid>
     )
 }

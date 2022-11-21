@@ -42,6 +42,15 @@ export default function Sidebar(props) {
                 </ListItemButton>
             </ListItem>
 
+            <ListItem key="permissions" disablePadding component={Link} href="/permissions">
+                <ListItemButton>
+                    <ListItemIcon>
+                        <Dashboard color={menuColor} />
+                    </ListItemIcon>
+                    <ListItemText primary="Permissions" />
+                </ListItemButton>
+            </ListItem>
+
             <ListItem key="profile" disablePadding component={Link} href="/profile">
                 <ListItemButton>
                     <ListItemIcon>

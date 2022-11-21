@@ -13,6 +13,7 @@ import myTheme from "./theme";
 import authService from "./services/auth-service";
 import UsersView from "./pages/users-view.component"
 import RolesView from "./pages/roles-view.component";
+import PermissionsView from "./pages/permissions-view.component";
 import Profile from "./pages/profile";
 const drawerWidth = 240;
 
@@ -47,7 +48,7 @@ class App extends Component {
               <Route path="/home" element={<Home />} />
               <Route path="/users" element={<UsersView />} />
               <Route path="/roles" element={<RolesView />} />
-              {/* <Route path="/permissions" element={<PermissionsView />} /> */}
+              <Route path="/permissions" element={<PermissionsView />} />
               <Route path="/login" element={<Login />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFoundPage />} />

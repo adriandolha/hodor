@@ -74,7 +74,7 @@ def google_login():
     return redirect(redirect_url)
 
 
-@google_oauth.route('/auth/')
+@google_oauth.route('/')
 def google_auth():
     """
         Redirect uri after google authorization code oauth. Authenticates user using google information, login_type

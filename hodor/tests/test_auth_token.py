@@ -19,7 +19,7 @@ class TestAuthToken:
         return issue_token_for_user(user)
 
     def test_auth_token_permissions_valid(self, client, query_mock, user_admin_valid, role_admin_valid):
-        _response = client.get('/api/auth/profile', headers={
+        _response = client.get('/api/profile', headers={
             'Authorization': f'Bearer {self.issue_token(user_admin_valid, role_admin_valid)}'})
         assert _response.status_code == 200
         data = json.loads(_response.data.decode('utf-8'))
@@ -56,13 +56,13 @@ class TestAuthToken:
         _token = self.issue_token(user_valid, role_user_valid)
         User.query.filter_by.return_value.filter_by.return_value.first.return_value = None
         User.query.filter_by.return_value.first.return_value = None
-        _response = client.get('/api/auth/profile', headers={
+        _response = client.get('/api/profile', headers={
             'Authorization': f'Bearer {_token}'})
         assert _response.status_code == 403
         assert json.loads(_response.data.decode('utf-8')) == 'Forbidden.'
 
     def test_auth_token_missing(self, client, query_mock, user_valid, role_user_valid):
-        _response = client.get('/api/auth/profile')
+        _response = client.get('/api/profile')
         assert _response.status_code == 401
         assert json.loads(_response.data.decode('utf-8')) == 'Invalid token.'
 
@@ -72,7 +72,7 @@ class TestAuthToken:
         _token = self.issue_token(user_valid, role_user_valid)
         User.query.filter_by.return_value.filter_by.return_value.first.return_value = None
         User.query.filter_by.return_value.first.return_value = None
-        _response = client.get('/api/auth/profile', headers={
+        _response = client.get('/api/profile', headers={
             'Authorization': f'Beare {_token}'})
         assert _response.status_code == 401
         assert json.loads(_response.data.decode('utf-8')) == 'Invalid token.'
@@ -81,7 +81,7 @@ class TestAuthToken:
         from hodor.models import BlacklistToken
         _token = self.issue_token(user_valid, role_user_valid)
         BlacklistToken.query.filter_by.return_value.first.return_value = BlacklistToken(token=_token)
-        _response = client.get('/api/auth/profile', headers={
+        _response = client.get('/api/profile', headers={
             'Authorization': f'Bearer {_token}'})
         assert _response.status_code == 401
         assert json.loads(_response.data.decode('utf-8')) == 'Invalid token.'

@@ -6,12 +6,12 @@ from hodor.serializers import to_json, from_json
 class TestPermission:
     def test_permission_add(self, config_valid, admin_access_token, permission_edit_books_valid):
         _response = requests.delete(
-            url=f'{config_valid["root_url"]}/api/auth/permissions/{permission_edit_books_valid["name"]}',
+            url=f'{config_valid["root_url"]}/api/permissions/{permission_edit_books_valid["name"]}',
             headers={'Content-Type': 'application/json',
                      'Authorization': f'Bearer {admin_access_token}'}, timeout=5,
             data=to_json(permission_edit_books_valid).encode('utf-8'))
         assert _response.status_code == 204
-        _response = requests.post(url=f'{config_valid["root_url"]}/api/auth/permissions',
+        _response = requests.post(url=f'{config_valid["root_url"]}/api/permissions',
                                   headers={'Content-Type': 'application/json',
                                            'Authorization': f'Bearer {admin_access_token}'}, timeout=5,
                                   data=to_json(permission_edit_books_valid).encode('utf-8'))
@@ -22,7 +22,7 @@ class TestPermission:
         assert data['id'] == permission_edit_books_valid['id']
 
     def test_get_permissions(self, config_valid, admin_access_token):
-        _response = requests.get(url=f'{config_valid["root_url"]}/api/auth/permissions',
+        _response = requests.get(url=f'{config_valid["root_url"]}/api/permissions',
                                  headers={'Content-Type': 'application/json',
                                           'Authorization': f'Bearer {admin_access_token}'}, timeout=5)
         assert _response.status_code == 200

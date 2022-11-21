@@ -44,10 +44,10 @@ def create_flask_app():
             User.insert_users(_config)
 
     db.init_app(app)
-    app.register_blueprint(google_oauth, url_prefix='/api/auth/google')
-    app.register_blueprint(token_auth, url_prefix='/api/auth')
+    app.register_blueprint(google_oauth, url_prefix='/api/google')
+    app.register_blueprint(token_auth, url_prefix='/api')
     app.register_blueprint(users, url_prefix='/api/users')
-    swaggerui_blueprint = get_swaggerui_blueprint('/api/auth/docs', '/api/auth/spec')
+    swaggerui_blueprint = get_swaggerui_blueprint('/api/docs', '/api/spec')
     app.register_blueprint(swaggerui_blueprint)
     app.url_map.strict_slashes = False
     ExceptionHandlers(app)

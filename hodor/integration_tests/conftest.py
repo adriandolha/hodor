@@ -86,7 +86,7 @@ def user_access_token(config_valid):
 
 
 def _get_access_token(config_valid, password, username):
-    _response = requests.get(url=f'{config_valid["root_url"]}/api/auth/signin',
+    _response = requests.get(url=f'{config_valid["root_url"]}/api/signin',
                              headers={'Content-Type': 'application/json'}, timeout=3,
                              auth=HTTPBasicAuth(username, password))
     print(_response.content)

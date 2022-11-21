@@ -81,8 +81,8 @@ spec:
             httpGet:
               path: /health
               port: 8000
-            initialDelaySeconds: 3
-            periodSeconds: 5
+            initialDelaySeconds: 5
+            periodSeconds: 30
           volumeMounts:
             - mountPath: /jwk/certs
               name: jwk-certs

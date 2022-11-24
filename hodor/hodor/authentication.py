@@ -1,5 +1,6 @@
 import json
 import logging
+import os
 from functools import lru_cache
 from urllib.request import urlopen
 
@@ -24,6 +25,10 @@ class Auth0Authenticator(Authenticator):
 
     @lru_cache()
     def secret_key(self):
+        public_key = self._app_context.config['jwk_public_key']
+        if public_key:
+            return public_key
+
         with open(self._app_context.config['jwk_public_key_path'], 'rb') as f:
             key = f.read()
         # return key
@@ -37,6 +42,10 @@ class Auth0Authenticator(Authenticator):
 
     @lru_cache()
     def _pulic_key(self):
+        public_key = self._app_context.config['jwk_public_key']
+        if public_key:
+            return public_key
+
         with open(self._app_context.config['jwk_public_key_path'], "r") as pk_file:
             pk = pk_file.read()
         LOGGER.debug(pk)

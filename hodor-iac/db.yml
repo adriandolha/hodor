@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  App:
+    Type: String
+    Default: "hodor"
+  DBClusterIdentifier:
+    Type: String
+    Default: "hodor"
+  EngineVersion:
+    Type: String
+    Default: "14.5"
+  MinCapacity:
+    Type: String
+    Default: "0.5"
+  MaxCapacity:
+    Type: String
+    Default: "1"
+
+
+Resources:
+  RDSDBCluster:
+    Type: 'AWS::RDS::DBCluster'
+    Properties:
+      Engine: aurora-postgresql
+      EngineVersion: !Ref EngineVersion
+      MasterUsername: !Sub '{{resolve:ssm:/hodor/db/username}}'
+      MasterUserPassword: !Sub '{{resolve:ssm:/hodor/db/password}}'
+
+  RDSDBInstance1:
+    Type: 'AWS::RDS::DBInstance'
+    Properties:
+#      DBInstanceIdentifier: aurora-postgresql-instance1
+      Engine: aurora-postgresql
+      DBClusterIdentifier: !Ref RDSDBCluster
+      PubliclyAccessible: 'true'
+      DBInstanceClass: db.t3.medium
+
+Outputs:
+  Db:
+    Description: Db
+    Value:
+      Ref: RDSDBCluster
+    Export:
+      Name:
+        'Fn::Sub': '${AWS::StackName}-Db'
+

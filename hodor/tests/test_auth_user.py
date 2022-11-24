@@ -12,7 +12,7 @@ class TestAuthUser:
     def test_user_signin(self, client, config_valid, login_valid_request, user_admin_valid, role_admin_valid,
                          query_mock):
         _response = client.post('/api/signin', json={'username': config_valid['admin_user'],
-                                                          'password': config_valid['admin_password']})
+                                                     'password': config_valid['admin_password']})
         assert _response.status_code == 200
         data = json.loads(_response.data.decode('utf-8'))
         assert data['access_token']
@@ -25,7 +25,7 @@ class TestAuthUser:
     def test_user_signin_invalid_password(self, client, config_valid, login_valid_request, user_admin_valid,
                                           role_admin_valid, query_mock):
         _response = client.post('/api/signin', json={'username': config_valid['admin_user'],
-                                                          'password': 'wrong_password'})
+                                                     'password': 'wrong_password'})
         assert _response.status_code == 401
         data = json.loads(_response.data.decode('utf-8'))
         assert data == 'Invalid username or password'
@@ -33,8 +33,8 @@ class TestAuthUser:
     def test_user_signup(self, client, config_valid, signup_valid_request, user_admin_valid, role_admin_valid,
                          query_mock):
         _response = client.post('/api/signup', json={'username': config_valid['admin_user'],
-                                                          'email': user_admin_valid['email'],
-                                                          'password': config_valid['admin_password']})
+                                                     'email': user_admin_valid['email'],
+                                                     'password': config_valid['admin_password']})
         assert _response.status_code == 200
         data = json.loads(_response.data.decode('utf-8'))
         assert data['access_token']
@@ -46,7 +46,7 @@ class TestAuthUser:
                                                  role_admin_valid,
                                                  query_mock):
         _response = client.post('/api/signup', json={'username': config_valid['admin_user'],
-                                                          'password': config_valid['admin_password']})
+                                                     'password': config_valid['admin_password']})
         assert _response.status_code == 400
         data = json.loads(_response.data.decode('utf-8'))
         assert data == 'User already registered'
@@ -173,7 +173,8 @@ class TestAuthUser:
         data = json.loads(_response.data.decode('utf-8'))
         assert data == 'User already registered.'
 
-    def test_user_add_role_not_found(self, client, config_valid, user_add_request_valid, new_user_valid, role_admin_valid,
+    def test_user_add_role_not_found(self, client, config_valid, user_add_request_valid, new_user_valid,
+                                     role_admin_valid,
                                      query_mock, admin_access_token, role_editor_valid, db_session):
         new_user_valid['role'] = role_editor_valid
         Role.query.filter_by.return_value.first.return_value = None
@@ -185,8 +186,8 @@ class TestAuthUser:
         assert data == 'Invalid role.'
 
     def test_add_user_permission_required(self, client, config_valid, login_valid_request, user_valid,
-                      role_admin_valid,
-                      user_access_token, query_mock):
+                                          role_admin_valid,
+                                          user_access_token, query_mock):
         User.query.all.return_value = [login_valid_request]
 
         _response = client.post(f'/api/users', headers={'Authorization': f'Bearer {user_access_token}'})

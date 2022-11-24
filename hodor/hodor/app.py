@@ -56,5 +56,11 @@ def create_flask_app():
     def health():
         LOGGER.info('Checking system health...')
         return 'all_good'
+
+    @app.route('/', methods=['GET'])
+    def home():
+        LOGGER.info('Checking system health...')
+        return 'all_good'
+
     LOGGER.debug(app.config)
     return app

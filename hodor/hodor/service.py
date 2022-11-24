@@ -1,4 +1,5 @@
 import logging
+import os
 import sys
 import threading
 from abc import ABC, abstractmethod
@@ -104,6 +105,9 @@ class UserService:
 
     @lru_cache()
     def secret_key(self):
+        private_key = self._app_context.config['jwk_private_key']
+        if private_key:
+            return private_key
         private_key = self._app_context.config.get('auth0_private_key')
         if not private_key:
             with open(self._app_context.config['jwk_private_key_path'], 'rb') as f:
@@ -112,7 +116,9 @@ class UserService:
 
     @lru_cache()
     def public_key(self):
-        public_key = None
+        public_key = self._app_context.config['jwk_public_key']
+        if public_key:
+            return public_key
         if not public_key:
             with open(self._app_context.config['jwk_public_key_path'], 'rb') as f:
                 public_key = f.read()
@@ -131,7 +137,7 @@ class UserService:
             else:
                 payload = jwt.decode(auth_token, self.public_key())
             return payload
-        except :
+        except:
             LOGGER.exception('token is invalid', exc_info=True)
             raise Exception('token is invalid')
 

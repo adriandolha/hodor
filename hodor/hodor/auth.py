@@ -1,3 +1,4 @@
+import os
 from functools import lru_cache
 
 import datetime
@@ -33,6 +34,9 @@ def new_token(payload: dict):
 
 @lru_cache()
 def jwk_key():
+    env_key = app_context().config['jwk_private_key']
+    if env_key:
+        return JsonWebKey.import_key(env_key)
     with open(app_context().config['jwk_private_key_path'], 'rb') as f:
         key = JsonWebKey.import_key(f.read())
     return key
@@ -356,8 +360,10 @@ def profile():
 def get_jwk():
     LOGGER.debug('Loading jwk from public key...')
     key_data = None
-    with open(app_context().config['jwk_public_key_path'], 'rb') as _key_file:
-        key_data = _key_file.read()
+    key_data = app_context().config['jwk_public_key']
+    if not key_data:
+        with open(app_context().config['jwk_public_key_path'], 'rb') as _key_file:
+            key_data = _key_file.read()
     LOGGER.debug(key_data)
     key = JsonWebKey.import_key(key_data, {'kty': 'RSA'})
     return {'keys': [{**key.as_dict(), 'kid': 'demo_key'}]}
